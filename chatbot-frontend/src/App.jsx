@@ -6,14 +6,17 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 const App = () => {
     const [lastTranscript, setLastTranscript] = useState('');
     const transcriptTimeoutRef = useRef(null);
+    const [isListning,setIsListning]=useState(false);
 
     const startListening = () => {
         SpeechRecognition.startListening({ continuous: true });
-        setLastTranscript('');
+        setIsListning(true)
+        setLastTranscript(setLastTranscript);
     };
 
     const stopListening = () => {
         SpeechRecognition.stopListening();
+        setIsListning(false)
         if (transcriptTimeoutRef.current) {
             clearTimeout(transcriptTimeoutRef.current);
         }
@@ -37,12 +40,24 @@ const App = () => {
         return null;
     }
 
+    // Visual element that changes color
+    const visualIndicatorStyle = {
+        width: '20px',
+        height: '20px',
+        borderRadius: '50%',
+        backgroundColor: isListning ? 'red' : 'green',
+        margin: '10px auto'
+    };
+
     return (
         <>
         <div className="container">
             <h1>Chatbot Frontend</h1>
             <br/>
             <p>This is the audio transcription window for the chatbot</p>
+            <div style={visualIndicatorStyle}></div> {/* Visual indicator element */}
+
+            
             <div className="main-content">
                 {transcript}
             </div>
